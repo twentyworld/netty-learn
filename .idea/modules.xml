@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/netty-BIO.iml" filepath="$PROJECT_DIR$/.idea/modules/netty-BIO.iml" group="netty-BIO" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/netty-BIO/netty-BIO_main.iml" filepath="$PROJECT_DIR$/.idea/modules/netty-BIO/netty-BIO_main.iml" group="netty-BIO" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/netty-BIO/netty-BIO_test.iml" filepath="$PROJECT_DIR$/.idea/modules/netty-BIO/netty-BIO_test.iml" group="netty-BIO" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/netty-helloworld.iml" filepath="$PROJECT_DIR$/.idea/modules/netty-helloworld.iml" group="netty-helloworld" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/netty-helloworld/netty-helloworld_main.iml" filepath="$PROJECT_DIR$/.idea/modules/netty-helloworld/netty-helloworld_main.iml" group="netty-helloworld" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/netty-helloworld/netty-helloworld_test.iml" filepath="$PROJECT_DIR$/.idea/modules/netty-helloworld/netty-helloworld_test.iml" group="netty-helloworld" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/netty-learn.iml" filepath="$PROJECT_DIR$/.idea/modules/netty-learn.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/netty-learn_main.iml" filepath="$PROJECT_DIR$/.idea/modules/netty-learn_main.iml" group="netty-learn" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/netty-learn_test.iml" filepath="$PROJECT_DIR$/.idea/modules/netty-learn_test.iml" group="netty-learn" />
+    </modules>
+  </component>
+</project>

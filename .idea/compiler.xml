@@ -8,6 +8,8 @@
       <module name="netty-helloworld_test" target="1.8" />
       <module name="netty-learn_main" target="1.8" />
       <module name="netty-learn_test" target="1.8" />
+      <module name="NIO_learn_main" target="1.8" />
+      <module name="NIO_learn_test" target="1.8" />
     </bytecodeTargetLevel>
   </component>
 </project>

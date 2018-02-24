@@ -1,4 +1,5 @@
 rootProject.name = 'netty-learn'
 include 'netty-BIO'
 include 'netty-helloworld'
+include 'NIO_learn'
 

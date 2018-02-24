@@ -2,6 +2,9 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/NIO_learn.iml" filepath="$PROJECT_DIR$/.idea/modules/NIO_learn.iml" group="NIO_learn" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/NIO_learn/NIO_learn_main.iml" filepath="$PROJECT_DIR$/.idea/modules/NIO_learn/NIO_learn_main.iml" group="NIO_learn" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/NIO_learn/NIO_learn_test.iml" filepath="$PROJECT_DIR$/.idea/modules/NIO_learn/NIO_learn_test.iml" group="NIO_learn" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/netty-BIO.iml" filepath="$PROJECT_DIR$/.idea/modules/netty-BIO.iml" group="netty-BIO" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/netty-BIO/netty-BIO_main.iml" filepath="$PROJECT_DIR$/.idea/modules/netty-BIO/netty-BIO_main.iml" group="netty-BIO" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/netty-BIO/netty-BIO_test.iml" filepath="$PROJECT_DIR$/.idea/modules/netty-BIO/netty-BIO_test.iml" group="netty-BIO" />

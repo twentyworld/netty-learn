@@ -9,6 +9,7 @@
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$" />
+            <option value="$PROJECT_DIR$/NIO_learn" />
             <option value="$PROJECT_DIR$/netty-BIO" />
             <option value="$PROJECT_DIR$/netty-helloworld" />
           </set>

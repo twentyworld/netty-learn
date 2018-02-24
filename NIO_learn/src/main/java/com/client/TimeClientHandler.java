@@ -29,7 +29,6 @@ public class TimeClientHandler implements Runnable {
         selector = Selector.open();
         socketChannel = SocketChannel.open();
         socketChannel.configureBlocking(false);
-
         stop = false;
     }
 
@@ -58,6 +57,7 @@ public class TimeClientHandler implements Runnable {
         }
 
         System.out.println("print");
+
         while(!stop) {
             try {
                 selector.select(1000);
@@ -67,12 +67,18 @@ public class TimeClientHandler implements Runnable {
 
                 while(iterator.hasNext()){
                     selectionKey = iterator.next();
-
                     iterator.remove();
                     handleInput(selectionKey);
                 }
-
             } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        if (selector!=null) {
+            try{
+                selector.close();
+            }catch (IOException e) {
                 e.printStackTrace();
             }
         }
@@ -85,7 +91,7 @@ public class TimeClientHandler implements Runnable {
 
             if (selectionKey.isConnectable() && socketChannel.finishConnect()) {
                 socketChannel.register(selector,SelectionKey.OP_READ);
-                write();
+                write(socketChannel);
 
                 if (selectionKey.isReadable()) {
                     ByteBuffer buffer = ByteBuffer.allocate(1024);
@@ -111,16 +117,19 @@ public class TimeClientHandler implements Runnable {
 
 
     private void doConnect() throws IOException {
+
         if (socketChannel.connect(new InetSocketAddress(host, port))) {
             socketChannel.register(selector, SelectionKey.OP_READ);
-            write();
+            write(socketChannel);
+            System.out.println("do connect and write.");
         } else {
             socketChannel.register(selector, SelectionKey.OP_CONNECT);
+            System.out.println("do connect and write2.");
         }
 
     }
 
-    private void write() throws IOException {
+    private void write(SocketChannel socketChannel) throws IOException {
         byte[] context = "hello server".getBytes();
 
         ByteBuffer byteBuffer = ByteBuffer.allocate(context.length);
@@ -131,7 +140,6 @@ public class TimeClientHandler implements Runnable {
 
         if (!byteBuffer.hasRemaining())
             System.out.println("send successful.");
-
 
     }
 }

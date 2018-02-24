@@ -26,9 +26,13 @@ public class MultipleserTimeServer implements Runnable {
     public MultipleserTimeServer(int port) {
         try {
             selector = Selector.open();
+            //打开，用于监听客户端的连接，是所有客户端连接的父Channel
             serverSocketChannel = ServerSocketChannel.open();
+            //设置为非阻塞
             serverSocketChannel.configureBlocking(false);
+            //绑定监听端口
             serverSocketChannel.socket().bind(new InetSocketAddress(port), 1024);
+            //将ServerSocketChannel注册到Selector上，监听Accept事件
             serverSocketChannel.register(selector, SelectionKey.OP_ACCEPT);
 
             System.out.println(port);
@@ -58,6 +62,7 @@ public class MultipleserTimeServer implements Runnable {
     @Override
     public void run() {
         System.out.println("client coming");
+        //多路复用器在线程run方法中无线轮询准备就绪的key
         while (!stop) {
             try {
                 selector.select(1000);
@@ -89,10 +94,12 @@ public class MultipleserTimeServer implements Runnable {
         if (selectionKey.isValid()) {
             if (selectionKey.isAcceptable()) {
                 System.out.println("connect");
+                //多路复用器监听到新的客户端的接入，处理请求
                 ServerSocketChannel serverSocketChannel = (ServerSocketChannel) selectionKey.channel();
                 SocketChannel socketChannel = serverSocketChannel.accept();
                 socketChannel.configureBlocking(false);
                 socketChannel.register(selector, SelectionKey.OP_READ);
+
 
                 System.out.println(selectionKey.isReadable());
                 if (selectionKey.isReadable()) {

@@ -1,4 +1,6 @@
-package com.client;
+package com.nio.client;
+
+import org.apache.log4j.Logger;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -17,6 +19,10 @@ import java.util.Set;
  * from win.
  */
 public class TimeClientHandler implements Runnable {
+    
+    Logger logger = Logger.getLogger(TimeClientHandler.class);
+    
+    
     private String host;
     private int port;
     private Selector selector;
@@ -31,11 +37,11 @@ public class TimeClientHandler implements Runnable {
         socketChannel.configureBlocking(false);
         stop = false;
     }
-
-    public void stop() {
-        stop = true;
-    }
-
+//
+//    public void stop() {
+//        stop = true;
+//    }
+//
     /**
      * When an object implementing interface <code>Runnable</code> is used
      * to create a thread, starting the thread causes the object's
@@ -56,19 +62,30 @@ public class TimeClientHandler implements Runnable {
             e.printStackTrace();
         }
 
-        System.out.println("print");
+       logger.info("print");
 
         while(!stop) {
             try {
                 selector.select(1000);
                 Set<SelectionKey> selectionKeys = selector.selectedKeys();
                 Iterator<SelectionKey> iterator = selectionKeys.iterator();
-                SelectionKey selectionKey = null;
+                SelectionKey selectionKey ;
 
                 while(iterator.hasNext()){
                     selectionKey = iterator.next();
                     iterator.remove();
-                    handleInput(selectionKey);
+                    try{
+                        handleInput(selectionKey);
+                    }catch (IOException e){
+                        e.printStackTrace();
+                        if (selectionKey!=null){
+                            selectionKey.cancel();
+                            if (selectionKey.channel()!=null) {
+                                selectionKey.channel().close();
+                            }
+                        }
+                    }
+
                 }
             } catch (IOException e) {
                 e.printStackTrace();
@@ -90,41 +107,40 @@ public class TimeClientHandler implements Runnable {
             SocketChannel socketChannel = (SocketChannel) selectionKey.channel();
 
             if (selectionKey.isConnectable() && socketChannel.finishConnect()) {
-                socketChannel.register(selector,SelectionKey.OP_READ);
+                socketChannel.register(selector, SelectionKey.OP_READ);
                 write(socketChannel);
-
-                if (selectionKey.isReadable()) {
-                    ByteBuffer buffer = ByteBuffer.allocate(1024);
-                    int readBytes = socketChannel.read(buffer);
-                    if (readBytes>0) {
-                        buffer.flip();
-                        byte[] context = new byte[buffer.remaining()];
-                        buffer.get(context);
-
-                        System.out.println(new String(context,"UTF-8"));
-                    }
-                    else if (readBytes<0) {
-                        selectionKey.cancel();
-                        socketChannel.close();
-                    }
-
-
-                }
-
             }
         }
+
+        if (selectionKey.isReadable()) {
+            ByteBuffer buffer = ByteBuffer.allocate(1024);
+            int readBytes = socketChannel.read(buffer);
+            if (readBytes>0) {
+                buffer.flip();
+                byte[] context = new byte[buffer.remaining()];
+                buffer.get(context);
+
+               logger.info(new String(context,"UTF-8"));
+            }
+            else if (readBytes<0) {
+                selectionKey.cancel();
+                socketChannel.close();
+            }
+
+
+        }
+
     }
 
 
     private void doConnect() throws IOException {
-
         if (socketChannel.connect(new InetSocketAddress(host, port))) {
             socketChannel.register(selector, SelectionKey.OP_READ);
             write(socketChannel);
-            System.out.println("do connect and write.");
+           logger.info("do connected and write.");
         } else {
             socketChannel.register(selector, SelectionKey.OP_CONNECT);
-            System.out.println("do connect and write2.");
+           logger.info("do connect.");
         }
 
     }
@@ -139,7 +155,7 @@ public class TimeClientHandler implements Runnable {
         socketChannel.write(byteBuffer);
 
         if (!byteBuffer.hasRemaining())
-            System.out.println("send successful.");
+           logger.info("send successful.");
 
     }
 }

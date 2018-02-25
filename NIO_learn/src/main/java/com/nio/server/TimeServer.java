@@ -1,4 +1,4 @@
-package com.server;
+package com.nio.server;
 
 /**
  * Created by teemper on 2018/2/24, 16:53.
@@ -9,7 +9,7 @@ package com.server;
  */
 public class TimeServer {
     public static void main(String[] args) {
-        int port = 8080;
+        int port = 8090;
 
         MultipleserTimeServer timeServer = new MultipleserTimeServer(port);
 

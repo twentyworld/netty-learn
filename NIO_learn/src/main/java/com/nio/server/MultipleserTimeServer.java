@@ -1,4 +1,6 @@
-package com.server;
+package com.nio.server;
+
+import org.apache.log4j.Logger;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -19,6 +21,7 @@ import java.util.Set;
  */
 public class MultipleserTimeServer implements Runnable {
 
+    Logger logger = Logger.getLogger(MultipleserTimeServer.class);
     private Selector selector;
     private ServerSocketChannel serverSocketChannel;
     private volatile boolean stop;
@@ -35,7 +38,7 @@ public class MultipleserTimeServer implements Runnable {
             //将ServerSocketChannel注册到Selector上，监听Accept事件
             serverSocketChannel.register(selector, SelectionKey.OP_ACCEPT);
 
-            System.out.println(port);
+            logger.info(port);
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -61,27 +64,26 @@ public class MultipleserTimeServer implements Runnable {
      */
     @Override
     public void run() {
-        System.out.println("client coming");
         //多路复用器在线程run方法中无线轮询准备就绪的key
         while (!stop) {
             try {
                 selector.select(1000);
                 Set<SelectionKey> selectionKeys = selector.selectedKeys();
                 Iterator<SelectionKey> iterator = selectionKeys.iterator();
-                SelectionKey key = null;
+                SelectionKey key;
 
                 while (iterator.hasNext()) {
                     key = iterator.next();
                     iterator.remove();
-                    try{
+                    try {
                         handleInput(key);
 
-                    }catch (Exception e) {
-                        if (key!=null) {
+                    } catch (Exception e) {
+                        if (key != null) {
                             key.cancel();
-                            if (key.channel()!=null)
-                                key.channel().close();
+                            if (key.channel() != null) key.channel().close();
                         }
+                        logger.info("wrong info.");
                     }
                 }
             } catch (IOException e) {
@@ -90,10 +92,10 @@ public class MultipleserTimeServer implements Runnable {
         }
     }
 
-    public void handleInput(SelectionKey selectionKey) throws IOException {
+    private void handleInput(SelectionKey selectionKey) throws IOException {
         if (selectionKey.isValid()) {
             if (selectionKey.isAcceptable()) {
-                System.out.println("connect");
+                logger.info("connect");
                 //多路复用器监听到新的客户端的接入，处理请求
                 ServerSocketChannel serverSocketChannel = (ServerSocketChannel) selectionKey.channel();
                 SocketChannel socketChannel = serverSocketChannel.accept();
@@ -101,28 +103,30 @@ public class MultipleserTimeServer implements Runnable {
                 socketChannel.register(selector, SelectionKey.OP_READ);
 
 
-                System.out.println(selectionKey.isReadable());
-                if (selectionKey.isReadable()) {
-                    SocketChannel socketChannel1 = (SocketChannel) selectionKey.channel();
-                    ByteBuffer buffer = ByteBuffer.allocate(1024);
-                    int readBuffer = socketChannel1.read(buffer);
-
-                    System.out.println("read context");
-                    if (readBuffer > 0) {
-                        buffer.flip();
-                        byte[] bytes = new byte[buffer.remaining()];
-                        buffer.get(bytes);
-                        String context = new String(bytes, "UTF-8");
-                        System.out.println(context);
-                        System.out.println(System.currentTimeMillis());
-                        write(socketChannel1, System.currentTimeMillis() + "");
-                    } else if (readBuffer < 0) {
-                        selectionKey.cancel();
-                        socketChannel1.close();
-                    }
-                }
+                logger.info(selectionKey.isReadable());
             }
         }
+
+        if (selectionKey.isReadable()) {
+            SocketChannel socketChannel1 = (SocketChannel) selectionKey.channel();
+            ByteBuffer buffer = ByteBuffer.allocate(1024);
+            int readBuffer = socketChannel1.read(buffer);
+
+            logger.info("read context");
+            if (readBuffer > 0) {
+                buffer.flip();
+                byte[] bytes = new byte[buffer.remaining()];
+                buffer.get(bytes);
+                String context = new String(bytes, "UTF-8");
+                logger.info(context);
+                logger.info(System.currentTimeMillis());
+                write(socketChannel1, System.currentTimeMillis() + "");
+            } else if (readBuffer < 0) {
+                selectionKey.cancel();
+                socketChannel1.close();
+            }
+        }
+
     }
 
 

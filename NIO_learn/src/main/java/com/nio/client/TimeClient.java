@@ -1,4 +1,4 @@
-package com.client;
+package com.nio.client;
 
 import java.io.IOException;
 
@@ -11,7 +11,7 @@ import java.io.IOException;
  */
 public class TimeClient {
     public static void main(String[] args) {
-        int port = 8080;
+        int port = 8090;
         try {
             new Thread(new TimeClientHandler("127.0.0.1",port),"TimeClient").start();
         } catch (IOException e) {
